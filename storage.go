@@ -55,13 +55,16 @@ func Set(key string, val Object) (bool, error) {
     result := send("set", key, val)
     return result.value.(bool), result.err
 }
-
 func Get(key string) (Object, bool) {
     result := send("get", key, nil)
     if result.err != nil {
         return nil, false
     }
-    return result.value.(Object), true
+    value, ok := result.value.(Object)
+    if !ok {
+        return nil, false
+    }
+    return value, true
 }
 
 func Del(key string) (bool, error){
